@@ -37,11 +37,44 @@ top_5_status <- sf_trees %>%
   slice_max(tree_count, n=5) # select the top 5 highest values
 ```
 
+Make a graph of top 5 observations bylegal status
+```{r}
+ggplot(data = top_5_status, aes(x = fct_reorder(legal_status, tree_count), y = tree_count)) +
+  geom_col() +
+  labs(x = "Legal Status", y = "Tree Count") +
+  coord_flip() +
+  theme_minimal()
+  
+```
 
+### A few more data wrangling refresher examples
 
+Only want to keep observations (rows) for Blackwood Acacia Trees
 
+```{r}
+blackwood_acacia <- sf_trees %>% 
+  filter(str_detect(species, "Blackwood Acacia")) %>% #will look within a variable we specify adn see if a string is detected anywhere in that variable
+  select(legal_status, date, latitude, longitude)
 
+ggplot(data = blackwood_acacia, aes(x = longitude, y = latitude)) +
+  geom_point()
+```
 
+### tidyr::separate() and unite() functions
+
+Useful for combining and separating columns
+
+```{r}
+sf_trees_sep <- sf_trees %>% 
+  separate(species, into = c("spp_scientific", "spp_common"), sep = "::")
+```
+
+Example of tidyr::unite()
+
+```{r}
+sf_trees_unite <- sf_trees %>% 
+  unite("id_status", tree_id:legal_status, sep = "_cool_")
+```
 
 
 
